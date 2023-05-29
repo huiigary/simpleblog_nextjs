@@ -1,5 +1,8 @@
+'use client'
+import Navbar from './Navbar'
 import './globals.css'
 import { Inter } from 'next/font/google'
+import { SessionProvider } from 'next-auth/react' // Enables "useSession()"
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -14,8 +17,14 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
+    <html lang='en'>
+      <SessionProvider>
+        <body className='mx-4 md:mx-48 xl:mx-96'>
+          {/* inserted navbar here. Children is the rest of the app */}
+          <Navbar />
+          {children}
+        </body>
+      </SessionProvider>
     </html>
   )
 }
