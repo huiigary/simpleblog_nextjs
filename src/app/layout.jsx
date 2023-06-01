@@ -3,6 +3,7 @@ import Navbar from './Navbar'
 import './globals.css'
 import { Inter } from 'next/font/google'
 import { SessionProvider } from 'next-auth/react' // Enables "useSession()"
+import { Toaster } from 'react-hot-toast'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -17,6 +18,7 @@ export default function RootLayout({ children }) {
       {/* <SessionProvider> */}
       <body className='mx-4 md:mx-48 xl:mx-96'>
         {/* inserted navbar here. Children is the rest of the app */}
+        <Toaster />
         <Navbar />
         {children}
       </body>

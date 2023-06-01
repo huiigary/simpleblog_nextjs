@@ -2,6 +2,7 @@
 import axios from 'axios'
 import React from 'react'
 import { useState } from 'react'
+import toast from 'react-hot-toast'
 
 const CreatePost = () => {
   const [title, setTitle] = useState('')
@@ -10,18 +11,19 @@ const CreatePost = () => {
   const submitPost = async (e: React.FormEvent) => {
     console.log('----submitting post -----')
     e.preventDefault()
-    setIsDisabled(true) //
-    let createPost = await axios
-      .post('/api/posts', { title })
-      .then(() => {
-        // clear post
-        setTitle('')
-        setIsDisabled(false)
-      })
-      .catch((err) => {
-        console.error({ err })
-      })
+    setIsDisabled(true)
+    let createPost = await axios.post('/api/posts', { title })
     console.log({ createPost })
+    if (createPost.data.status === 200) {
+      // On successful post
+      toast.success('Successful Post')
+      setTitle('')
+      setIsDisabled(false)
+    } else if (createPost.data.status != 200) {
+      // on error post (status not 200)
+      toast.error('Failed to post')
+      setIsDisabled(false)
+    }
   }
 
   return (
@@ -30,6 +32,7 @@ const CreatePost = () => {
         <textarea
           className='p-4 text-lg rounded-md my-2'
           onChange={(e) => setTitle(e.target.value)}
+          value={title}
           color='red'
           name='title'
           placeholder='Start Posting!'

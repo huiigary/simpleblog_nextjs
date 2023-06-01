@@ -10,8 +10,6 @@ export async function GET(request: Response) {
 export async function POST(request: Response) {
   const awaitedRequest = await request.json() // Await request,json() to access request object
   const session = await getServerSession(authOptions)
-  console.log('inside POST', { request, awaitedRequest, session })
-
   if (!session) {
     return NextResponse.json({ status: 400, message: 'Please sign in' })
   } else {
@@ -35,9 +33,9 @@ export async function POST(request: Response) {
       where: { email: session?.user?.email || 'DEFAULT EMAIL' },
     })
 
-    console.log({ prismaUser })
+    // console.log({ prismaUser })
     try {
-      const results = await prisma.post.create({
+      const postResults = await prisma.post.create({
         data: {
           title,
           userId: prismaUser?.id || 'DEFAULT USER ID',
@@ -45,12 +43,15 @@ export async function POST(request: Response) {
         },
       })
 
-      console.log({ results })
-      return new Response('successful post', { status: 200 })
+      console.log({ postResults })
+      return NextResponse.json({
+        status: 200,
+        message: 'Successful post',
+      })
     } catch (err) {
-      return new Response('fail to create post', {
-        status: 403,
-        statusText: JSON.stringify(err),
+      return NextResponse.json({
+        status: 200,
+        message: JSON.stringify(err),
       })
     }
   }
